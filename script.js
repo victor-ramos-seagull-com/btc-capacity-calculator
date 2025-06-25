@@ -4,11 +4,27 @@ function updateDisplay(inputId, valueId) {
   value.textContent = input.value;
 }
 
-function secondsToMMSS(seconds) {
-  if (seconds < 0) seconds = 0;
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+function formatTime(seconds) {
+  seconds = Math.max(0, Math.round(seconds));
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+  if (seconds < 3600) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m ${s}s`;
+  }
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${h}h ${m}m ${s}s`;
+}
+
+function animateResults() {
+  const box = document.getElementById('results');
+  if (!box) return;
+  box.classList.add('flash');
+  setTimeout(() => box.classList.remove('flash'), 300);
 }
 
 function calculate() {
@@ -17,12 +33,12 @@ function calculate() {
   const copies = parseInt(document.getElementById('copies').value, 10);
 
   const totalPrintedLabels = totalLabels * copies;
-  const totalPages = totalPrintedLabels / labelsPerPage;
+  const totalPages = Math.ceil(totalPrintedLabels / labelsPerPage);
   const seconds = 0.964095 * totalPrintedLabels - 258.632;
 
-  document.getElementById('total-pages').textContent = totalPages.toFixed(2);
-  document.getElementById('total-time-sec').textContent = seconds.toFixed(2);
-  document.getElementById('total-time-mmss').textContent = secondsToMMSS(seconds);
+  document.getElementById('total-pages').textContent = totalPages;
+  document.getElementById('total-time').textContent = formatTime(seconds);
+  animateResults();
 }
 
 function bindInput(id, valueId) {
