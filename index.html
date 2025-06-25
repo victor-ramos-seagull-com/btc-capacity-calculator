@@ -19,6 +19,7 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    html {scroll-behavior: smooth;}
     .fade-in {animation: fadeIn 0.5s ease-in-out forwards; opacity:0;}
     @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
   </style>
@@ -26,9 +27,22 @@
 <body class="min-h-screen flex items-center justify-center bg-gray-100 relative bg-[url('assets/background.jpg')] bg-cover bg-center font-sans">
   <div class="absolute inset-0 bg-black/30 backdrop-blur -z-10"></div>
   <main class="container mx-auto p-4 flex flex-col md:flex-row gap-4 fade-in">
-    <aside class="md:w-1/3 bg-orange-800/90 text-white backdrop-blur-lg p-6 rounded-lg">
-      <h1 class="text-2xl font-bold mb-2">Print Capacity Calculator</h1>
-      <p class="text-sm">Estimate how many pages will be printed and how long it will take based on your settings.</p>
+    <aside class="md:w-1/3 bg-orange-800/90 text-white backdrop-blur-lg p-6 rounded-lg flex flex-col items-center text-center space-y-4">
+      <img src="assets/calculator.svg" alt="Calculator icon" class="w-10 h-10"/>
+      <h1 class="text-2xl font-bold">Print Capacity Calculator</h1>
+      <p class="text-sm leading-relaxed">
+        Estimate how many pages will be printed and how long it will take based on your settings.
+        <br><br>
+        This calculator helps sales and support teams quickly evaluate printing capacity based on real-world configurations. Adjust parameters like label design, number of printers, and external data sources, and get instant feedback on expected performance.
+        <br><br>
+        Use this tool to:
+        <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+          <li>Plan printing workloads more effectively</li>
+          <li>Optimize printer and gateway usage</li>
+          <li>Avoid unexpected delays in label production</li>
+        </ul>
+      </p>
+      <button id="assumptions-btn" class="bg-white text-orange-800 font-semibold px-4 py-2 rounded shadow mt-auto">Calculator Assumptions</button>
     </aside>
     <section class="md:flex-1 bg-white/80 backdrop-blur-md shadow-lg p-6 rounded-lg">
       <div class="space-y-4">
@@ -72,6 +86,30 @@
       </div>
     </section>
   </main>
+
+  <section id="faq" class="container mx-auto my-8 p-4 space-y-4">
+    <h2 class="text-xl font-bold mb-4">Frequently Asked Questions (FAQ)</h2>
+    <details class="bg-white/80 backdrop-blur-md p-4 rounded-lg">
+      <summary class="cursor-pointer font-semibold">Are the calculated values exact?</summary>
+      <p class="mt-2">No, the values are estimates based on general performance metrics. Actual performance may vary.</p>
+    </details>
+    <details class="bg-white/80 backdrop-blur-md p-4 rounded-lg">
+      <summary class="cursor-pointer font-semibold">What factors can affect print speed?</summary>
+      <p class="mt-2">Printer model, printer status, label complexity, server load, and network quality can all impact performance.</p>
+    </details>
+    <details class="bg-white/80 backdrop-blur-md p-4 rounded-lg">
+      <summary class="cursor-pointer font-semibold">Does the server condition affect printing?</summary>
+      <p class="mt-2">Yes. If the server experiences lag or downtime, print speed may be reduced. However, the platform guarantees 99.99% uptime for optimal performance.</p>
+    </details>
+    <details class="bg-white/80 backdrop-blur-md p-4 rounded-lg">
+      <summary class="cursor-pointer font-semibold">What is a print gateway?</summary>
+      <p class="mt-2">A print gateway is a local service that manages communication between the central platform and the printers.</p>
+    </details>
+    <details class="bg-white/80 backdrop-blur-md p-4 rounded-lg">
+      <summary class="cursor-pointer font-semibold">Are external data sources slower?</summary>
+      <p class="mt-2">Yes. If your label template uses data from Google Drive, Excel, or remote files, that may add latency to each print job.</p>
+    </details>
+  </section>
   <script>
 function updateDisplay(inputId, valueId) {
   const input = document.getElementById(inputId);
@@ -115,6 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
   bindInput('contains-barcodes');
   bindInput('external-data');
   calculate();
+  const btn = document.getElementById('assumptions-btn');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.getElementById('faq').scrollIntoView({behavior:'smooth'});
+    });
+  }
 });
   </script>
 </body>
