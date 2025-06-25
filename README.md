@@ -1,6 +1,6 @@
 # Print Capacity Calculator
 
-This is a lightweight web application that estimates the number of printed pages and the time required for printing labels. It runs entirely in the browser and can be served via a simple Node.js server.
+This is a lightweight web application that estimates the number of printed pages and the time required for printing labels. It now uses **Tailwind CSS** for styling and runs entirely in the browser. A simple Node.js server is included for convenience.
 
 ## Usage
 

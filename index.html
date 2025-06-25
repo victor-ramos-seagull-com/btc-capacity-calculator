@@ -4,54 +4,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Print Capacity Calculator</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in {animation: fadeIn 0.5s ease-in-out forwards; opacity:0;}
+    @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
+  </style>
 </head>
-<body>
-  <div class="container">
-    <div class="left-panel">
-      <h1>Print Capacity Calculator</h1>
-      <p>Estimate how many pages will be printed and how long it will take based on your settings.</p>
-    </div>
-    <div class="right-panel">
-      <div class="calculator">
-        <div class="input-group">
-          <label for="labels-per-page">Labels per page: <span id="labels-per-page-value"></span></label>
-          <input type="range" id="labels-per-page" min="1" max="20" value="10">
+<body class="min-h-screen flex items-center justify-center bg-gray-100 relative">
+  <img src="https://images.unsplash.com/photo-1581090700227-1b3a8e564025?auto=format&fit=crop&w=1350&q=80" alt="printers" class="absolute inset-0 -z-10 w-full h-full object-cover">
+  <main class="container mx-auto p-4 flex flex-col md:flex-row gap-4 fade-in">
+    <aside class="md:w-1/3 bg-orange-800/90 text-white backdrop-blur-lg p-6 rounded-lg font-serif">
+      <h1 class="text-2xl font-bold mb-2">Print Capacity Calculator</h1>
+      <p class="text-sm">Estimate how many pages will be printed and how long it will take based on your settings.</p>
+    </aside>
+    <section class="md:flex-1 bg-white/80 backdrop-blur-md shadow-lg p-6 rounded-lg">
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <label for="labels-per-page" class="font-medium">Labels per page: <span id="labels-per-page-value"></span></label>
+          <input type="range" id="labels-per-page" min="1" max="20" value="10" class="w-full transition-all duration-300 rounded-lg">
         </div>
-        <div class="input-group">
-          <label for="total-labels">Total labels: <span id="total-labels-value"></span></label>
-          <input type="range" id="total-labels" min="1" max="1000" value="100">
+        <div class="space-y-1">
+          <label for="total-labels" class="font-medium">Total labels: <span id="total-labels-value"></span></label>
+          <input type="range" id="total-labels" min="1" max="1000" value="100" class="w-full transition-all duration-300 rounded-lg">
         </div>
-        <div class="input-group">
-          <label for="copies">Copies: <span id="copies-value"></span></label>
-          <input type="range" id="copies" min="1" max="10" value="1">
+        <div class="space-y-1">
+          <label for="copies" class="font-medium">Copies: <span id="copies-value"></span></label>
+          <input type="range" id="copies" min="1" max="10" value="1" class="w-full transition-all duration-300 rounded-lg">
         </div>
-        <div class="input-group">
-          <label for="printers">Printers: <span id="printers-value"></span></label>
-          <input type="range" id="printers" min="1" max="10" value="1">
+        <div class="space-y-1">
+          <label for="printers" class="font-medium">Printers: <span id="printers-value"></span></label>
+          <input type="range" id="printers" min="1" max="10" value="1" class="w-full transition-all duration-300 rounded-lg">
         </div>
-        <div class="input-group">
-          <label for="gateways">Print gateways: <span id="gateways-value"></span></label>
-          <input type="range" id="gateways" min="1" max="10" value="1">
+        <div class="space-y-1">
+          <label for="gateways" class="font-medium">Print gateways: <span id="gateways-value"></span></label>
+          <input type="range" id="gateways" min="1" max="10" value="1" class="w-full transition-all duration-300 rounded-lg">
         </div>
-        <div class="input-group toggle">
-          <label for="optimized-driver">Optimized driver</label>
-          <input type="checkbox" id="optimized-driver">
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="optimized-driver" class="transition-all duration-300 rounded">
+          <label for="optimized-driver" class="font-medium">Optimized driver?</label>
         </div>
-        <fieldset>
-          <legend>Label characteristics</legend>
-          <label><input type="checkbox" id="contains-text"> Contains text</label>
-          <label><input type="checkbox" id="contains-images"> Contains images</label>
-          <label><input type="checkbox" id="contains-barcodes"> Contains barcodes</label>
-          <label><input type="checkbox" id="external-data"> Accesses external data sources</label>
+        <fieldset class="border rounded-lg p-4">
+          <legend class="font-medium">Label characteristics</legend>
+          <div class="flex flex-col gap-2 mt-2">
+            <label class="inline-flex items-center space-x-2"><input type="checkbox" id="contains-text" class="rounded"> <span>Contains text</span></label>
+            <label class="inline-flex items-center space-x-2"><input type="checkbox" id="contains-images" class="rounded"> <span>Contains images</span></label>
+            <label class="inline-flex items-center space-x-2"><input type="checkbox" id="contains-barcodes" class="rounded"> <span>Contains barcodes</span></label>
+            <label class="inline-flex items-center space-x-2"><input type="checkbox" id="external-data" class="rounded"> <span>Accesses external data sources</span></label>
+          </div>
         </fieldset>
-        <div class="results">
+        <div class="mt-4 font-semibold text-xl">
           <p>Total pages: <span id="total-pages">0</span></p>
           <p>Estimated time: <span id="total-time-sec">0</span> seconds (<span id="total-time-mmss">00:00</span>)</p>
         </div>
       </div>
-    </div>
-  </div>
-<script src="script.js"></script>
+    </section>
+  </main>
+  <script>
+function updateDisplay(inputId, valueId) {
+  const input = document.getElementById(inputId);
+  const value = document.getElementById(valueId);
+  if(value) value.textContent = input.value;
+}
+function secondsToMMSS(seconds) {
+  if (seconds < 0) seconds = 0;
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+function calculate() {
+  const labelsPerPage = parseInt(document.getElementById('labels-per-page').value,10);
+  const totalLabels = parseInt(document.getElementById('total-labels').value,10);
+  const copies = parseInt(document.getElementById('copies').value,10);
+  const totalPrintedLabels = totalLabels * copies;
+  const totalPages = totalPrintedLabels / labelsPerPage;
+  const seconds = 0.964095 * totalPrintedLabels - 258.632;
+  document.getElementById('total-pages').textContent = totalPages.toFixed(2);
+  document.getElementById('total-time-sec').textContent = seconds.toFixed(2);
+  document.getElementById('total-time-mmss').textContent = secondsToMMSS(seconds);
+}
+function bindInput(id, valueId) {
+  const input = document.getElementById(id);
+  input.addEventListener('input', () => {
+    if (valueId) updateDisplay(id,valueId);
+    calculate();
+  });
+  if (valueId) updateDisplay(id,valueId);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  bindInput('labels-per-page','labels-per-page-value');
+  bindInput('total-labels','total-labels-value');
+  bindInput('copies','copies-value');
+  bindInput('printers','printers-value');
+  bindInput('gateways','gateways-value');
+  bindInput('optimized-driver');
+  bindInput('contains-text');
+  bindInput('contains-images');
+  bindInput('contains-barcodes');
+  bindInput('external-data');
+  calculate();
+});
+  </script>
 </body>
 </html>
