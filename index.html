@@ -11,7 +11,8 @@
     @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gray-100 relative">
+<body class="min-h-screen flex items-center justify-center bg-gray-100 relative bg-[url('assets/background.jpg')] bg-cover bg-center">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur -z-10"></div>
   <img src="https://images.unsplash.com/photo-1581090700227-1b3a8e564025?auto=format&fit=crop&w=1350&q=80" alt="printers" class="absolute inset-0 -z-10 w-full h-full object-cover">
   <main class="container mx-auto p-4 flex flex-col md:flex-row gap-4 fade-in">
     <aside class="md:w-1/3 bg-orange-800/90 text-white backdrop-blur-lg p-6 rounded-lg font-serif">
