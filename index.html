@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Capacity Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <h1>Print Capacity Calculator</h1>
+      <p>Estimate how many pages will be printed and how long it will take based on your settings.</p>
+    </div>
+    <div class="right-panel">
+      <div class="calculator">
+        <div class="input-group">
+          <label for="labels-per-page">Labels per page: <span id="labels-per-page-value"></span></label>
+          <input type="range" id="labels-per-page" min="1" max="20" value="10">
+        </div>
+        <div class="input-group">
+          <label for="total-labels">Total labels: <span id="total-labels-value"></span></label>
+          <input type="range" id="total-labels" min="1" max="1000" value="100">
+        </div>
+        <div class="input-group">
+          <label for="copies">Copies: <span id="copies-value"></span></label>
+          <input type="range" id="copies" min="1" max="10" value="1">
+        </div>
+        <div class="input-group">
+          <label for="printers">Printers: <span id="printers-value"></span></label>
+          <input type="range" id="printers" min="1" max="10" value="1">
+        </div>
+        <div class="input-group">
+          <label for="gateways">Print gateways: <span id="gateways-value"></span></label>
+          <input type="range" id="gateways" min="1" max="10" value="1">
+        </div>
+        <div class="input-group toggle">
+          <label for="optimized-driver">Optimized driver</label>
+          <input type="checkbox" id="optimized-driver">
+        </div>
+        <fieldset>
+          <legend>Label characteristics</legend>
+          <label><input type="checkbox" id="contains-text"> Contains text</label>
+          <label><input type="checkbox" id="contains-images"> Contains images</label>
+          <label><input type="checkbox" id="contains-barcodes"> Contains barcodes</label>
+          <label><input type="checkbox" id="external-data"> Accesses external data sources</label>
+        </fieldset>
+        <div class="results">
+          <p>Total pages: <span id="total-pages">0</span></p>
+          <p>Estimated time: <span id="total-time-sec">0</span> seconds (<span id="total-time-mmss">00:00</span>)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>
