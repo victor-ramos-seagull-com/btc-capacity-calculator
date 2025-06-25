@@ -22,6 +22,8 @@
     html {scroll-behavior: smooth;}
     .fade-in {animation: fadeIn 0.5s ease-in-out forwards; opacity:0;}
     @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
+    @keyframes flash {0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+    .flash {animation: flash 0.3s ease-in-out;}
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start bg-gray-100 relative bg-[url('assets/background.jpg')] bg-cover bg-center font-sans">
@@ -79,9 +81,9 @@
             <label class="inline-flex items-center space-x-2"><input type="checkbox" id="external-data" class="rounded"> <span>Accesses external data sources</span></label>
           </div>
         </fieldset>
-        <div class="mt-4 font-semibold text-xl">
-          <p>Total pages: <span id="total-pages">0</span></p>
-          <p>Estimated time: <span id="total-time-sec">0</span> seconds (<span id="total-time-mmss">00:00</span>)</p>
+        <div id="results" class="mt-4 p-4 rounded-md bg-white shadow-md text-right text-blue-800 space-y-1 transition-transform">
+          <p class="font-semibold">🧮 Total pages: <span id="total-pages" class="font-bold">0</span></p>
+          <p class="font-semibold">⏱️ Estimated time: <span id="total-time" class="font-bold">0s</span></p>
         </div>
       </div>
     </section>
@@ -116,22 +118,38 @@ function updateDisplay(inputId, valueId) {
   const value = document.getElementById(valueId);
   if(value) value.textContent = input.value;
 }
-function secondsToMMSS(seconds) {
-  if (seconds < 0) seconds = 0;
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+function formatTime(seconds) {
+  seconds = Math.max(0, Math.round(seconds));
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+  if (seconds < 3600) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m ${s}s`;
+  }
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${h}h ${m}m ${s}s`;
+}
+
+function animateResults() {
+  const box = document.getElementById('results');
+  if (!box) return;
+  box.classList.add('flash');
+  setTimeout(() => box.classList.remove('flash'), 300);
 }
 function calculate() {
   const labelsPerPage = parseInt(document.getElementById('labels-per-page').value,10);
   const totalLabels = parseInt(document.getElementById('total-labels').value,10);
   const copies = parseInt(document.getElementById('copies').value,10);
   const totalPrintedLabels = totalLabels * copies;
-  const totalPages = totalPrintedLabels / labelsPerPage;
+  const totalPages = Math.ceil(totalPrintedLabels / labelsPerPage);
   const seconds = 0.964095 * totalPrintedLabels - 258.632;
-  document.getElementById('total-pages').textContent = totalPages.toFixed(2);
-  document.getElementById('total-time-sec').textContent = seconds.toFixed(2);
-  document.getElementById('total-time-mmss').textContent = secondsToMMSS(seconds);
+  document.getElementById('total-pages').textContent = totalPages;
+  document.getElementById('total-time').textContent = formatTime(seconds);
+  animateResults();
 }
 function bindInput(id, valueId) {
   const input = document.getElementById(id);
