@@ -1,7 +1,7 @@
 function updateDisplay(inputId, valueId) {
   const input = document.getElementById(inputId);
   const value = document.getElementById(valueId);
-  value.textContent = input.value;
+  if (value) value.textContent = input.value;
 }
 
 function formatTime(seconds) {
@@ -34,7 +34,7 @@ function calculate() {
 
   const totalPrintedLabels = totalLabels * copies;
   const totalPages = Math.ceil(totalPrintedLabels / labelsPerPage);
-  const seconds = 0.964095 * totalPrintedLabels - 258.632;
+  const seconds = 0.0580952380952 * totalPrintedLabels - 54.8;
 
   document.getElementById('total-pages').textContent = totalPages;
   document.getElementById('total-time').textContent = formatTime(seconds);
@@ -62,4 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
   bindInput('contains-barcodes');
   bindInput('external-data');
   calculate();
+  const btn = document.getElementById('assumptions-btn');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.getElementById('faq').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 });
