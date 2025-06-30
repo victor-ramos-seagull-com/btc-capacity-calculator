@@ -1,3 +1,5 @@
+let currentVersion = 'v11.5';
+
 function updateDisplay(inputId, valueId) {
   const input = document.getElementById(inputId);
   const value = document.getElementById(valueId);
@@ -34,7 +36,12 @@ function calculate() {
 
   const totalPrintedLabels = totalLabels * copies;
   const totalPages = Math.ceil(totalPrintedLabels / labelsPerPage);
-  const seconds = 0.0580952380952 * totalPrintedLabels - 54.8;
+  let seconds;
+  if (currentVersion === 'v11.5') {
+    seconds = 0.0605 * totalPrintedLabels - 23.97;
+  } else {
+    seconds = 0.0580952380952 * totalPrintedLabels - 54.8;
+  }
 
   document.getElementById('total-pages').textContent = totalPages;
   document.getElementById('total-time').textContent = formatTime(seconds);
@@ -61,6 +68,7 @@ function setVersion(version) {
       tab.classList.remove('border-blue-600', 'font-bold');
     }
   });
+  currentVersion = version;
   if (version === 'v11.4') {
     driver.classList.add('hidden');
     labels.classList.add('hidden');
@@ -75,6 +83,7 @@ function setVersion(version) {
     info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August';
     info.classList.remove('hidden');
   }
+  calculate();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
