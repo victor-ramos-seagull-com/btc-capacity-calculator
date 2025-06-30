@@ -50,6 +50,33 @@ function bindInput(id, valueId) {
   if (valueId) updateDisplay(id, valueId);
 }
 
+function setVersion(version) {
+  const driver = document.getElementById('optimized-driver-section');
+  const labels = document.getElementById('label-characteristics-section');
+  const info = document.getElementById('version-info');
+  document.querySelectorAll('.version-tab').forEach(tab => {
+    if (tab.dataset.version === version) {
+      tab.classList.add('border-blue-600', 'font-bold');
+    } else {
+      tab.classList.remove('border-blue-600', 'font-bold');
+    }
+  });
+  if (version === 'v11.4') {
+    driver.classList.add('hidden');
+    labels.classList.add('hidden');
+    info.classList.add('hidden');
+  } else if (version === 'v11.5') {
+    driver.classList.remove('hidden');
+    labels.classList.remove('hidden');
+    info.classList.add('hidden');
+  } else if (version === 'v11.6') {
+    driver.classList.remove('hidden');
+    labels.classList.remove('hidden');
+    info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August.';
+    info.classList.remove('hidden');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   bindInput('labels-per-page', 'labels-per-page-value');
   bindInput('total-labels', 'total-labels-value');
@@ -62,6 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
   bindInput('contains-barcodes');
   bindInput('external-data');
   calculate();
+  const tabs = document.querySelectorAll('.version-tab');
+  tabs.forEach(t => t.addEventListener('click', () => setVersion(t.dataset.version)));
+  setVersion('v11.5');
   const btn = document.getElementById('assumptions-btn');
   if (btn) {
     btn.addEventListener('click', () => {
