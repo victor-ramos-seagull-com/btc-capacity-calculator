@@ -72,7 +72,7 @@ function setVersion(version) {
   } else if (version === 'v11.6') {
     driver.classList.remove('hidden');
     labels.classList.remove('hidden');
-    info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August.';
+    info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August';
     info.classList.remove('hidden');
   }
 }
