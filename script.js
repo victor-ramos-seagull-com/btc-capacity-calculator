@@ -1,4 +1,5 @@
 let currentVersion = 'v11.5';
+let developerOptionsEnabled = false;
 
 function updateDisplay(inputId, valueId) {
   const input = document.getElementById(inputId);
@@ -29,6 +30,14 @@ function animateResults() {
   setTimeout(() => box.classList.remove('flash'), 300);
 }
 
+function updateTechnicalVisibility() {
+  const execSection = document.getElementById('executor-section');
+  const cloudRow = document.getElementById('cloud-time-row');
+  const show = developerOptionsEnabled && (currentVersion === 'v11.5' || currentVersion === 'v11.6');
+  if (execSection) execSection.classList.toggle('hidden', !show);
+  if (cloudRow) cloudRow.classList.toggle('hidden', !show);
+}
+
 function calculate() {
   const labelsPerPage = parseInt(document.getElementById('labels-per-page').value, 10);
   const totalLabels = parseInt(document.getElementById('total-labels').value, 10);
@@ -45,6 +54,19 @@ function calculate() {
 
   document.getElementById('total-pages').textContent = totalPages;
   document.getElementById('total-time').textContent = formatTime(seconds);
+
+  let cloud = NaN;
+  if (developerOptionsEnabled && (currentVersion === 'v11.5' || currentVersion === 'v11.6')) {
+    const count = parseInt(document.getElementById('executor-count').value, 10);
+    const raw = 4659.91 - 478.055 * Math.log(1733.93 - 1562.24 * count);
+    if (!isNaN(raw) && isFinite(raw)) {
+      cloud = parseFloat(raw.toFixed(2));
+    }
+  }
+  const cloudEl = document.getElementById('cloud-time');
+  if (cloudEl) {
+    cloudEl.textContent = !isNaN(cloud) ? cloud : 'N/A';
+  }
   animateResults();
 }
 
@@ -83,6 +105,7 @@ function setVersion(version) {
     info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August';
     info.classList.remove('hidden');
   }
+  updateTechnicalVisibility();
   calculate();
 }
 
@@ -97,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindInput('contains-images');
   bindInput('contains-barcodes');
   bindInput('external-data');
+  bindInput('executor-count', 'executor-count-value');
   calculate();
   const tabs = document.querySelectorAll('.version-tab');
   tabs.forEach(t => t.addEventListener('click', () => setVersion(t.dataset.version)));
@@ -107,4 +131,29 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('faq').scrollIntoView({ behavior: 'smooth' });
     });
   }
+  const techBtn = document.getElementById('technical-btn');
+  if (techBtn) {
+    techBtn.addEventListener('click', () => {
+      const sec = document.getElementById('technical-settings');
+      if (!sec) return;
+      const closed = sec.classList.contains('max-h-0');
+      if (closed) {
+        sec.classList.remove('max-h-0', 'opacity-0');
+        sec.classList.add('max-h-96', 'opacity-100');
+      } else {
+        sec.classList.add('max-h-0', 'opacity-0');
+        sec.classList.remove('max-h-96', 'opacity-100');
+      }
+    });
+  }
+  const devToggle = document.getElementById('developer-toggle');
+  if (devToggle) {
+    developerOptionsEnabled = devToggle.checked;
+    devToggle.addEventListener('change', () => {
+      developerOptionsEnabled = devToggle.checked;
+      updateTechnicalVisibility();
+      calculate();
+    });
+  }
+  updateTechnicalVisibility();
 });
