@@ -53,16 +53,17 @@ function calculate() {
   }
 
   document.getElementById('total-pages').textContent = totalPages;
-  document.getElementById('total-time').textContent = formatTime(seconds);
 
   let cloud = NaN;
   if (developerOptionsEnabled && (currentVersion === 'v11.5' || currentVersion === 'v11.6')) {
     const count = parseInt(document.getElementById('executor-count').value, 10);
-    const raw = 4659.91 - 478.055 * Math.log(1733.93 - 1562.24 * count);
+    const raw = 0.000489511 * totalLabels - 10.85582423 * count + 33.472078991926;
     if (!isNaN(raw) && isFinite(raw)) {
       cloud = parseFloat(raw.toFixed(2));
     }
   }
+  const finalSeconds = !isNaN(cloud) && cloud > seconds ? cloud : seconds;
+  document.getElementById('total-time').textContent = formatTime(finalSeconds);
   const cloudEl = document.getElementById('cloud-time');
   if (cloudEl) {
     cloudEl.textContent = !isNaN(cloud) ? cloud : 'N/A';
@@ -129,21 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btn) {
     btn.addEventListener('click', () => {
       document.getElementById('faq').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-  const techBtn = document.getElementById('technical-btn');
-  if (techBtn) {
-    techBtn.addEventListener('click', () => {
-      const sec = document.getElementById('technical-settings');
-      if (!sec) return;
-      const closed = sec.classList.contains('max-h-0');
-      if (closed) {
-        sec.classList.remove('max-h-0', 'opacity-0');
-        sec.classList.add('max-h-96', 'opacity-100');
-      } else {
-        sec.classList.add('max-h-0', 'opacity-0');
-        sec.classList.remove('max-h-96', 'opacity-100');
-      }
     });
   }
   const devToggle = document.getElementById('developer-toggle');
