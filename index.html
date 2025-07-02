@@ -54,20 +54,14 @@
         <button id="assumptions-btn" class="text-[rgb(222,90,0)] bg-white font-semibold px-4 py-2 rounded shadow mt-auto">Calculator Assumptions</button>
       </aside>
       <section class="md:flex-1 bg-white/90 backdrop-blur-md shadow-lg p-6 rounded-lg">
-        <div class="flex justify-end">
-          <button id="technical-btn" class="text-xl p-1" aria-label="Technical Settings">🔧</button>
-        </div>
-        <div id="technical-settings" class="overflow-hidden max-h-0 opacity-0 transition-all duration-300">
-          <div class="border rounded p-4 bg-gray-50 space-y-2">
-            <label class="flex items-center space-x-2">
-              <input type="checkbox" id="developer-toggle" class="rounded">
-              <span class="font-medium">Developer Options</span>
-            </label>
-            <div id="executor-section" class="space-y-1">
-              <label for="executor-count" class="font-medium">BTXML Executor Instances: <span id="executor-count-value"></span></label>
-              <input type="range" id="executor-count" min="1" max="10" value="3" class="w-full transition-all duration-300 rounded-lg">
+        <div class="flex justify-end mb-4">
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="developer-toggle" class="sr-only peer">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-blue-500 transition duration-300 relative">
+              <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5"></span>
             </div>
-          </div>
+            <span class="ml-2 text-sm font-medium">Developer Options</span>
+          </label>
         </div>
         <div id="version-info" class="hidden bg-yellow-100 text-yellow-800 border-l-4 border-yellow-400 p-3 rounded mb-4"></div>
         <div class="space-y-4">
@@ -90,6 +84,10 @@
         <div class="space-y-1">
           <label for="gateways" class="font-medium">Print gateways: <span id="gateways-value"></span></label>
           <input type="range" id="gateways" min="1" max="10" value="1" class="w-full transition-all duration-300 rounded-lg">
+        </div>
+        <div id="executor-section" class="space-y-1 hidden">
+          <label for="executor-count" class="font-medium">BTXML Executor Instances: <span id="executor-count-value"></span></label>
+          <input type="range" id="executor-count" min="1" max="10" value="3" class="w-full transition-all duration-300 rounded-lg">
         </div>
         <div id="optimized-driver-section" class="flex items-center space-x-2">
           <input type="checkbox" id="optimized-driver" class="transition-all duration-300 rounded">
