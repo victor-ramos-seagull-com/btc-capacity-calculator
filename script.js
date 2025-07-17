@@ -33,9 +33,9 @@ function animateResults() {
 function updateTechnicalVisibility() {
   const execSection = document.getElementById('executor-section');
   const cloudRow = document.getElementById('cloud-time-row');
-  const show = developerOptionsEnabled && (currentVersion === 'v11.5' || currentVersion === 'v11.6');
-  if (execSection) execSection.classList.toggle('hidden', !show);
-  if (cloudRow) cloudRow.classList.toggle('hidden', !show);
+  const v115Or116 = currentVersion === 'v11.5' || currentVersion === 'v11.6';
+  if (execSection) execSection.classList.toggle('hidden', !(developerOptionsEnabled && v115Or116));
+  if (cloudRow) cloudRow.classList.toggle('hidden', !v115Or116);
 }
 
 function calculate() {
@@ -55,14 +55,18 @@ function calculate() {
   document.getElementById('total-pages').textContent = totalPages;
 
   let cloud = NaN;
-  if (developerOptionsEnabled && (currentVersion === 'v11.5' || currentVersion === 'v11.6')) {
+  if (currentVersion === 'v11.5' || currentVersion === 'v11.6') {
     const count = parseInt(document.getElementById('executor-count').value, 10);
     const raw = 0.000489511 * totalLabels - 10.85582423 * count + 33.472078991926;
     if (!isNaN(raw) && isFinite(raw)) {
       cloud = parseFloat(raw.toFixed(2));
     }
   }
-  const finalSeconds = !isNaN(cloud) && cloud > seconds ? cloud : seconds;
+
+  let finalSeconds = seconds;
+  if (!isNaN(cloud) && (currentVersion === 'v11.5' || currentVersion === 'v11.6') && cloud > seconds) {
+    finalSeconds = cloud;
+  }
   document.getElementById('total-time').textContent = formatTime(finalSeconds);
   const cloudEl = document.getElementById('cloud-time');
   if (cloudEl) {
