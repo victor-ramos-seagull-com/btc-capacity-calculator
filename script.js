@@ -33,9 +33,11 @@ function animateResults() {
 function updateTechnicalVisibility() {
   const execSection = document.getElementById('executor-section');
   const cloudRow = document.getElementById('cloud-time-row');
+  const toggleContainer = document.getElementById('developer-toggle-container');
   const v115Or116 = currentVersion === 'v11.5' || currentVersion === 'v11.6';
+  if (toggleContainer) toggleContainer.classList.toggle('hidden', !v115Or116);
   if (execSection) execSection.classList.toggle('hidden', !(developerOptionsEnabled && v115Or116));
-  if (cloudRow) cloudRow.classList.toggle('hidden', !v115Or116);
+  if (cloudRow) cloudRow.classList.toggle('hidden', !(developerOptionsEnabled && v115Or116));
 }
 
 function calculate() {
@@ -59,7 +61,7 @@ function calculate() {
     const count = parseInt(document.getElementById('executor-count').value, 10);
     const raw = 0.000489511 * totalLabels - 10.85582423 * count + 33.472078991926;
     if (!isNaN(raw) && isFinite(raw)) {
-      cloud = parseFloat(raw.toFixed(2));
+      cloud = Math.round(raw);
     }
   }
 
@@ -70,7 +72,7 @@ function calculate() {
   document.getElementById('total-time').textContent = formatTime(finalSeconds);
   const cloudEl = document.getElementById('cloud-time');
   if (cloudEl) {
-    cloudEl.textContent = !isNaN(cloud) ? cloud : 'N/A';
+    cloudEl.textContent = !isNaN(cloud) ? formatTime(cloud) : 'N/A';
   }
   animateResults();
 }
@@ -88,6 +90,8 @@ function setVersion(version) {
   const driver = document.getElementById('optimized-driver-section');
   const labels = document.getElementById('label-characteristics-section');
   const info = document.getElementById('version-info');
+  const devContainer = document.getElementById('developer-toggle-container');
+  const devToggle = document.getElementById('developer-toggle');
   document.querySelectorAll('.version-tab').forEach(tab => {
     if (tab.dataset.version === version) {
       tab.classList.add('border-blue-600', 'font-bold');
@@ -100,15 +104,20 @@ function setVersion(version) {
     driver.classList.add('hidden');
     labels.classList.add('hidden');
     info.classList.add('hidden');
+    if (devContainer) devContainer.classList.add('hidden');
+    if (devToggle) devToggle.checked = false;
+    developerOptionsEnabled = false;
   } else if (version === 'v11.5') {
     driver.classList.remove('hidden');
     labels.classList.remove('hidden');
     info.classList.add('hidden');
+    if (devContainer) devContainer.classList.remove('hidden');
   } else if (version === 'v11.6') {
     driver.classList.remove('hidden');
     labels.classList.remove('hidden');
     info.textContent = '⚠️ Version 11.6 is still in progress and will be available in August';
     info.classList.remove('hidden');
+    if (devContainer) devContainer.classList.remove('hidden');
   }
   updateTechnicalVisibility();
   calculate();
